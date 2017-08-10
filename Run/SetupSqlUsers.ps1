@@ -9,11 +9,7 @@
 
 if ($databaseServer -eq "localhost") {
     if ($password -ne "") {
-<<<<<<< HEAD
-        $sqlcmd = "ALTER LOGIN sa with password=" +"'" + $password + "'" + " , CHECK_POLICY = OFF;ALTER LOGIN sa ENABLE;"
-=======
         $sqlcmd = "ALTER LOGIN sa with password=" +"'" + $password + "'" + ",CHECK_POLICY = OFF;ALTER LOGIN sa ENABLE;"
->>>>>>> refs/remotes/Microsoft/master
         & sqlcmd -Q $sqlcmd
     }
     
