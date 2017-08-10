@@ -8,6 +8,13 @@
 
 if ($auth -eq "Windows") {
     if (($password -ne "") -and ($username -ne "")) {
+        Write-Host "Disabling Password Complexity Requirements"
+        $tmpSecPol = "${env:appdata}\secpol.cfg"
+        secedit /export /cfg $tmpSecPol | Out-Null
+        $dummy = (gc $tmpSecPol).replace("PasswordComplexity = 1", "PasswordComplexity = 0") | Out-File $tmpSecPol 
+        secedit /configure /db c:\windows\security\local.sdb /cfg $tmpSecPol /areas SECURITYPOLICY | Out-Null
+        rm -force $tmpSecPol -confirm:$false | Out-Null
+
         Write-Host "Create Windows user"
         New-LocalUser -AccountNeverExpires -FullName $username -Name $username -Password (ConvertTo-SecureString -AsPlainText -String $password -Force) -ErrorAction Ignore | Out-Null
         Add-LocalGroupMember -Group administrators -Member $username -ErrorAction Ignore
